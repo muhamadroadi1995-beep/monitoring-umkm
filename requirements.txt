@@ -1,3 +1,6 @@
 streamlit
-pandas
-plotly
+playwright
+ddddocr
+faker
+Pillow
+nest_asyncio
