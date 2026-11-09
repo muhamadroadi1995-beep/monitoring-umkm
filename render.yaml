@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: dashboard-umkm-status
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: ./static
