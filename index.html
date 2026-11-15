@@ -1,106 +1,190 @@
-<!doctype html>
-<html lang="id">
+<!DOCTYPE html>
+<html lang="id" class="dark">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1424">
-  <title>Status Server | Dashboard UMKM</title>
-  <style>
-    :root{color-scheme:dark;--bg:#091321;--panel:#122137;--line:#263b56;--text:#edf4ff;--muted:#9aabc1;--blue:#56b1ff;--green:#38cf91;--red:#ff7777;--amber:#ffc66d}
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:radial-gradient(circle at 12% 0,#17365b 0,transparent 34%),var(--bg);color:var(--text);font:15px/1.5 Inter,Segoe UI,Arial,sans-serif;display:grid;place-items:center;padding:22px}
-    main{width:min(100%,680px)}
-    header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px}
-    .brand{font-weight:800;letter-spacing:.04em}.brand span{color:var(--blue)}
-    .tag{font-size:11px;letter-spacing:.12em;color:#9fcfff;border:1px solid #355577;border-radius:30px;padding:6px 10px}
-    .panel{background:linear-gradient(145deg,#152740,#101c2e);border:1px solid var(--line);border-radius:22px;padding:clamp(22px,5vw,38px);box-shadow:0 20px 55px #0004}
-    .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8dc9ff}
-    h1{font-size:clamp(30px,7vw,46px);line-height:1.08;margin:12px 0}
-    p{color:var(--muted)}
-    .status{display:flex;align-items:center;gap:14px;padding:18px;border-radius:15px;background:#0b1728;border:1px solid var(--line);margin:26px 0}
-    .dot{width:14px;height:14px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 6px #ffc66d20;flex:none}
-    .status.online .dot{background:var(--green);box-shadow:0 0 0 6px #38cf9120}
-    .status.offline .dot{background:var(--red);box-shadow:0 0 0 6px #ff777720}
-    .state{font-size:20px;font-weight:800;letter-spacing:.04em}
-    .sub{font-size:13px;color:var(--muted)}
-    .meta{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .meta div{background:#0d1a2b;border:1px solid var(--line);border-radius:12px;padding:13px}
-    .meta small{display:block;color:var(--muted);margin-bottom:5px}
-    .meta strong{font-size:14px;overflow-wrap:anywhere}
-    footer{font-size:12px;color:var(--muted);margin-top:20px;text-align:center}
-    @media(max-width:480px){.meta{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}}
-  </style>
-  <script src="./config.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATA ENTRY PRO - High-Speed Automation Service</title>
+    <script src="https://tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#020617',
+                            card: 'rgba(15, 23, 42, 0.75)',
+                            cyan: '#00f0ff',
+                            purple: '#c084fc',
+                            pink: '#f43f5e',
+                            emerald: '#10b981',
+                            amber: '#fbbf24'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Consolas', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <script src="https://jsdelivr.net"></script>
+
+    <style>
+        body {
+            background-color: #020617;
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 0;
+            animation: orbFloat 12s ease-in-out infinite alternate;
+        }
+        .orb-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, #00f0ff, #3b82f6); }
+        .orb-2 { bottom: 10%; right: -10%; width: 550px; height: 550px; background: radial-gradient(circle, #ec4899, #8b5cf6); }
+        .orb-3 { top: 40%; left: 25%; width: 500px; height: 500px; background: radial-gradient(circle, #10b981, #06b6d4); opacity: 0.15; }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 60px) scale(1.15); }
+        }
+
+        .glass-panel-ultra {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-panel-ultra:hover {
+            border-color: rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .text-gradient-rainbow {
+            background: linear-gradient(90deg, #00f0ff, #38bdf8, #c084fc, #f43f5e, #fbbf24, #10b981, #00f0ff);
+            background-size: 400% 400%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbowGradient 8s ease infinite;
+        }
+
+        @keyframes rainbowGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn-cyber-vibrant {
+            background: linear-gradient(135deg, #00f0ff 0%, #3b82f6 50%, #c084fc 100%);
+            background-size: 200% 200%;
+            box-shadow: 0 4px 25px rgba(0, 240, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn-cyber-vibrant:hover {
+            background-position: 100% 0;
+            box-shadow: 0 6px 35px rgba(192, 132, 252, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .neon-glow-cyan { box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); }
+        .neon-border-active { border-color: #00f0ff !important; box-shadow: 0 0 25px rgba(0, 240, 255, 0.3); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #00f0ff, #c084fc); border-radius: 4px; }
+    </style>
 </head>
-<body>
-<main>
-  <header><div class="brand">UMKM<span>.</span> DASHBOARD</div><div class="tag">PUBLIC STATUS PAGE</div></header>
-  <section class="panel">
-    <div class="eyebrow">Pemantauan koneksi</div>
-    <h1>Status Server Python</h1>
-    <p>Website ini tetap dapat dibuka meskipun komputer server sedang tidak aktif. Status di bawah diperiksa otomatis setiap 3 detik.</p>
-    <div id="statusCard" class="status checking" role="status" aria-live="polite">
-      <span class="dot"></span>
-      <div><div id="state" class="state">MEMERIKSA SERVER…</div><div id="detail" class="sub">Menghubungkan ke PC Windows 11</div></div>
-    </div>
-    <div class="meta">
-      <div><small>Pemeriksaan terakhir</small><strong id="checkedAt">Belum ada</strong></div>
-      <div><small>Interval pemeriksaan</small><strong>3 detik</strong></div>
-    </div>
-  </section>
-  <footer>Dashboard UMKM · Status koneksi saja · Tidak menyimpan atau mengirim data nasabah</footer>
-</main>
-<script>
-(() => {
-  const cfg = window.DASHBOARD_CONFIG || {};
-  const base = String(cfg.API_BASE_URL || "").replace(/\/+$/, "");
-  const card = document.getElementById("statusCard");
-  const state = document.getElementById("state");
-  const detail = document.getElementById("detail");
-  const checkedAt = document.getElementById("checkedAt");
-  let inFlight = false;
+<body class="relative min-h-screen text-slate-100 selection:bg-cyan-500 selection:text-black">
 
-  function setState(kind, title, message) {
-    card.className = "status " + kind;
-    state.textContent = title;
-    detail.textContent = message;
-  }
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
 
-  async function checkServer() {
-    if (inFlight) return;
-    inFlight = true;
-    try {
-      if (!base || base.includes("GANTI-ALAMAT")) {
-        throw new Error("Alamat API Cloudflare Tunnel belum diatur.");
-      }
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 2500);
-      let response;
-      try {
-        response = await fetch(base + "/health", {
-          method: "GET",
-          cache: "no-store",
-          mode: "cors",
-          signal: controller.signal
-        });
-      } finally {
-        clearTimeout(timeout);
-      }
-      if (!response.ok) throw new Error("Server memberi respons tidak berhasil.");
-      const data = await response.json();
-      if (data.status !== "online") throw new Error("Respons status tidak dikenali.");
-      setState("online", "SERVER ONLINE", "Python di PC Windows 11 berhasil dihubungi.");
-      checkedAt.textContent = new Date().toLocaleString("id-ID");
-    } catch (error) {
-      setState("offline", "SERVER OFFLINE", "PC, Python, atau koneksi tunnel tidak dapat dihubungi.");
-      checkedAt.textContent = new Date().toLocaleString("id-ID");
-    } finally {
-      inFlight = false;
-    }
-  }
-  checkServer();
-  setInterval(checkServer, 3000);
-})();
-</script>
-</body>
-</html>
+    <!-- NAVBAR -->
+    <nav class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 to-purple-500 p-0.5 flex items-center justify-center font-black text-white text-lg">
+                    DE
+                </div>
+                <span class="text-lg font-black tracking-wider text-gradient-rainbow">DATA ENTRY PRO</span>
+            </div>
+            <div class="hidden md:flex items-center gap-6 text-xs font-bold uppercase tracking-wider text-slate-300">
+                <a href="#fitur" class="hover:text-cyan-400 transition-colors">Keunggulan</a>
+                <a href="#layanan" class="hover:text-cyan-400 transition-colors">Layanan</a>
+                <a href="#harga" class="hover:text-cyan-400 transition-colors">Paket Harga</a>
+                <a href="#faq" class="hover:text-cyan-400 transition-colors">FAQ</a>
+            </div>
+            <a href="#order" class="btn-cyber-vibrant text-xs font-black px-5 py-2.5 rounded-xl text-white uppercase tracking-wider">
+                <i class="fa-solid fa-bolt mr-1"></i> Order Sekarang
+            </a>
+        </div>
+    </nav>
+
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24">
+        
+        <!-- HERO SECTION -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-6">
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-black uppercase tracking-widest">
+                    <span class="flex h-2 w-2 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span></span>
+                    High-Speed Robot Automation Engine v3.8
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none text-white">
+                    Entri Data & Skoring UMKM <br class="hidden sm:inline">
+                    <span class="text-gradient-rainbow">10x Lebih Cepat,</span> Akurat & Otomatis!
+                </h1>
+                <p class="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto lg:mx-0">
+                    Lelah input data referral skoring & rescoring manual satu per satu? Biarkan sistem otomatisasi cerdas kami yang menyelesaikannya secara instan, aman, bebas eror, dan langsung menghasilkan rekap siap pakai.
+                </p>
+                <div class="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
+                    <a href="#order" class="btn-cyber-vibrant font-black px-7 py-4 rounded-xl text-xs text-white uppercase tracking-widest">
+                        Mulai Formulir Order <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="#layanan" class="px-7 py-4 rounded-xl text-xs font-black bg-slate-900/80 border border-slate-700 hover:border-slate-500 transition-colors uppercase tracking-widest">
+                        Lihat Layanan
+                    </a>
+                </div>
+                <!-- Statistik Mini -->
+                <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800/80 max-w-md mx-auto lg:mx-0">
+                    <div>
+                        <div class="text-2xl font-black text-cyan-400">100%</div>
+                        <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Akurasi Validasi</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black text-purple-400">&lt; 1 Detik</div>
+                        <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Proses per Data</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black text-emerald-400">50K+</div>
+                        <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Data Sukses</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Animasi Mockup Interaktif Sisi Kanan -->
+            <div class="lg:col-span-5">
+                <div class="glass-panel-ultra p-6 space-y-4 border-cyan-500/20 neon-glow-cyan relative overflow-hidden">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        </div>
